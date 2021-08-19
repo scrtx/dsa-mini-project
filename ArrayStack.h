@@ -6,7 +6,7 @@ class Stack
 {
 public:
     virtual void push(int element)=0;
-    virtual void pop()=0;
+    virtual int pop()=0;
     virtual bool isEmpty()=0;
     virtual bool isFull()=0;
 };
@@ -47,15 +47,17 @@ public:
         } 
     }
         
-    virtual void pop()
+    virtual int pop()
     {
         if(!isEmpty()){
-            std::cout<<data[top]<<std::endl;
+            int x=data[top];
             top--;
+            return x;
         }
         else
-        {
+        {   
             std::cout<<"Stack Underflow."<<std::endl;
+            return -1;
         }
     }    
 };
