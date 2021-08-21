@@ -1,77 +1,109 @@
 #ifndef Evaluation_H
 #define Evaluation_H
 
+#include<string>
 #include"ArrayStack.h"
-Stack*s=new ArrayStack;
+ArrayStack s;
 
+//Function checks if character is operator.
 bool isOperator(char op)
 {
-    if(op == '+' || op == '-' || op == '*' || op == '/'){
+    if (op == '+' || op == '-' || op == '*' || op == '/')
+    {
         return true;
     }
-    else{
+    else
+    {
         return false;
     }
 }
 
+//Fuction checks if input is operand.
 bool isOperand(char op)
 {
-    if(op >= '0' && op <= '9'){
+    if (op >= '0' && op <= '9')
+    {
         return true;
     }
-    else{
+    else
+    {
         return false;
     }
 }
 
-int operate(int op1,int op2,char op)
-{
-    if(op == '+'){
+//Function operates op1 and op2 with operator op.
+int operate(int op1, int op2, char op)
+{   
+    if(op == '+')
+    {
         return op2 + op1;
     }
-    else if(op == '-'){
+
+    else if(op == '-')
+    {
         return op2 - op1;
     }
-    else if(op == '*'){
+
+    else if(op == '*')
+    {
         return op2 * op1;
     }
-    else if(op == '/'){
+
+    else if(op == '/')
+    {
         return op2 / op1;
     }
-    else{
-        return 0;
+
+    else
+    {
+        std::cout<<"Error"<<std::endl;
+        return -1;
     }
 }
 
-void evaluate(char postfix[100])
+//Function to Evaluate given Postfix expression.
+int evaluate(std::string postfix)
 {
-    int i=0;
-    int op1, op2, dummy;
-
-    while (postfix[i]!='\0')
+    int op1=0, op2=0;
+    
+    for (int i=0 ; i < postfix.length() ; i++)
     {
-        if(isOperand(postfix[i]))
+        if(postfix[i] == ' ')
         {
-            dummy=(int)(postfix[i]);
-            s->push(dummy);
+            //Skips spaces in Postfix expression.
+            continue;
         }
         else if(isOperator(postfix[i]))
-        {
-            op1=s->pop();
-            op2=s->pop();
-            s->push(operate(op1,op2,postfix[i]));
+        {   
+            //pop Two operands which are to be operated.
+            op1 = s.pop();
+            op2 = s.pop();
+            //Stores the Operated result in dummy variable.
+            int value = operate(op1, op2, postfix[i]);
+            //Pushes the result in dummy into stack.
+            s.push(value);
         }
-        else
+        else if(isOperand(postfix[i]))
         {
-            std::cout<<"Error"<<std::endl;
-            break;
+			int num = 0; 
+            //Loop is used to extract complete number for numbers with multiple digits.
+			while(i < postfix.length() && isOperand(postfix[i]))
+            {
+				num = 10 * num + (postfix[i] - '0'); 
+                /*The place value of num is increased and
+                (postfix[i] - '0') give number in postfix[i]*/
+				i++;
+			}
+            s.push(num); // pushes the num into stack.
+            --i; 
+            /*i should be decreased since it went pass the number after while loop.*/ 
         }
-        i++;
     }
-
-    if(!s->isEmpty()){
-        std::cout<<"Evaluated Result is : "<<s->pop()<<std::endl;
-    }
+    /*
+    Returns the final solution.
+    It was pushed into stack after final operation was dones.
+    */
+    return s.pop();
 }
 
 #endif
