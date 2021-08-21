@@ -78,10 +78,9 @@ int evaluate(std::string postfix)
             //pop Two operands which are to be operated.
             op1 = s.pop();
             op2 = s.pop();
-            //Stores the Operated result in dummy variable.
-            int value = operate(op1, op2, postfix[i]);
-            //Pushes the result in dummy into stack.
-            s.push(value);
+            
+            //Pushes the Operated result into Stack
+            s.push(operate(op1, op2, postfix[i]));
         }
         else if(isOperand(postfix[i]))
         {
@@ -98,10 +97,16 @@ int evaluate(std::string postfix)
             --i; 
             /*i should be decreased since it went pass the number after while loop.*/ 
         }
+        else
+        {
+            //Gives error message when input is not ' ', number or operator.
+            std::cout<<"Error, Invalid Input"<<std::endl;
+            break;
+        }
     }
     /*
     Returns the final solution.
-    It was pushed into stack after final operation was dones.
+    It was pushed into stack after final operation was done.
     */
     return s.pop();
 }
